@@ -1,0 +1,14 @@
+model {
+
+  for (i in 1:N){
+
+    y[i] ~ dnorm ( mu.y[i], tau.y )  #stochastic node
+    mu.y[i] <- alpha + beta*x[i]      #logical node
+
+  }
+
+  alpha ~ dnorm( 0, 0.001 )
+  beta ~ dnorm( 0, 0.001 )
+  tau.y ~ dgamma(0.001, 0.001)  
+
+}

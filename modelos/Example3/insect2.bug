@@ -1,0 +1,23 @@
+model
+	{
+for(i in 1 : N) {
+	Y[i] ~ dpois(mu[i])
+        mu[i] <- beta[J[i]]
+	J[i]<-1+step(x[i] - x.change) 		        
+	} 
+#posterior predictions	
+for(i in 1: N.new){
+	mu.new[i]<-beta[K[i]]
+	K[i]<-1+step(x.new[i] - x.change)
+	Y.new[i]~dpois(mu.new[i])
+	}
+
+#priors   
+	for(i in 1:2){
+	beta0[i]~dgamma(1,1)T(1,4)	
+	}
+	beta[1:2]<-sort(beta0) 
+	x.change ~ dunif(4,23)
+	}
+	
+	

@@ -1,0 +1,11 @@
+model
+	{
+	   for(i in 1 : N) {
+		Y[i]~dpois(mu[i]) 
+		mu[i]<- alpha
+		}
+	
+	#PRIORS
+	alpha~ dgamma(1,1)							
+ }
+

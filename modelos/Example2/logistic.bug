@@ -1,0 +1,11 @@
+model {
+
+  for (i in 1:N){
+    y[i] ~ dbin( p[i], M)  #stochastic node
+    logit(p[i]) <- alpha + beta*x[i] #logical node
+   
+  }
+#Priors
+  alpha ~ dnorm(0, 0.4)
+  beta ~ dnorm(0, 0.4)
+}

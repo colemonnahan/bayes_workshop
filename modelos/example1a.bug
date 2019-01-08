@@ -1,0 +1,27 @@
+
+model
+		{
+			for( i in 1 : N ) {
+
+    		y[i] ~ dnorm ( mu.y[i], tau.y )  
+    		mu.y[i] <- alpha + beta*x[i]      
+  			
+				#posterior predictive on observed data
+				y.hat[i]~ dnorm(mu.hat[i],tau.y)
+				mu.hat[i]<- alpha + beta * x[i]
+			}
+			alpha ~ dnorm(0.0,1.0E-6)
+			beta ~ dnorm(0.0,1.0E-6)
+			#Prior 1: inverse gamma on precision 
+			tau.y~dgamma(0.001,0.001)
+			sigma<-1/sqrt(tau.y)
+			# Prior 2: uniform on SD
+			#sigma~ dunif(0,100)
+			#tau.y<-1/(sigma*sigma)				
+			
+			#prediction of log-abundance 
+			for( j in 1 : M ){
+				y.new[j]~dnorm(mu.new[j], tau.y)
+				mu.new[j]<-alpha + beta * x.new[j]
+			}
+			}
