@@ -1,8 +1,8 @@
 model {
   ## prior
-  lambda~dunif(0,50)
+  lambda~dgamma(1,1)
   ## likelihood
   for(i in 1:N){
-    x[i]~dpois(lambda)
+    Y[i]~dpois(lambda)
   }
 }

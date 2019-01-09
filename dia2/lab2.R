@@ -1,7 +1,5 @@
-### Exploring more properties of Markov chains
-
-
-### Metropolis MCMC; x0 is the initial value; U controls how big of values
+### Metropolis MCMC; Niter is the number of samples; f is the un-normalized
+### pdf function; x0 is the initial value; U controls how big of values
 ### are proposed from a uniform distribution.
 mcmc <- function(Niter, f, x0=0, U=1){
   x <- rep(NA,Niter)
@@ -60,7 +58,6 @@ library(coda)
 acf(x1)
 acf(x2)
 acf(x3)
-
 ### Why do we care? Because we want as many samples as
 ### possible. Autocorrelation lowers the "effective samples"
 effectiveSize(x1)
@@ -82,7 +79,23 @@ par(mfcol=c(3,1))
 plot(x1, type='l', col=1, ylim=c(-3,3))
 plot(x2, type='l', col=2, ylim=c(-3,3))
 plot(x3, type='l', col=3, ylim=c(-3,3))
-
 effectiveSize(x1)
 effectiveSize(x2)
 effectiveSize(x3)
+
+
+
+library(R2jags)
+dat <- dget('datos/insect_data2.txt')
+plot(dat$x, dat$Y, xlab = "Female Egg Compliment",
+     ylab = "Eggs laid on host", pch = 15)
+inits <- function() list(lambda=runif(1,1,15))
+fit1 <- jags(data=dat, inits=inits, parameters.to.save='lambda',
+             model.file='modelos/insect1.jags', n.chains=3, n.iter=2000,
+             n.burnin=500, n.thin=1)
+traceplot(fit1)
+geweke.diag(fit1)
+effectiveSize(fit1)
+gelman.diag(as.mcmc(fit1))
+post <- data.frame(fit1$BUGSoutput$sims.matrix)
+hist(post$lambda)
