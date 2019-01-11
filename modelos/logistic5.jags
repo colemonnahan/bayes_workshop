@@ -2,9 +2,10 @@ model {
   #Priors
   theta~dnorm(1, 1/(.5*.5))
   beta1~dnorm(0,2)
+  beta2~dnorm(0,2)
   # likelihood
   for(i in 1:R){
-     p[i] <- ilogit(theta + beta1*x1[i])
+     p[i] <- ilogit(theta + beta1*x1[i] + beta2*x2[i])
      y[i] ~ dbin(p[i], N[i]) 
   }
   # posterior predictive distribution

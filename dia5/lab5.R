@@ -27,7 +27,7 @@ inits.nc <- function() list(
 
 growth.stan <- stan('modelos/growth.stan', data=dat, chains=chains,
                  init=inits, open_progress=FALSE, control=list(adapt_delta=.99))
-launch_shinystan(fit.stan)
+launch_shinystan(growth.stan)
 
 ## Repeat after non-centering
 growth.nc.stan <- stan('modelos/growth_nc.stan', data=dat, chains=chains,
