@@ -1,0 +1,8 @@
+model {
+  ##  Simulate model configuration from prior model
+  lambda ~ dnorm(0, 1/(6.5*6.5))I(0,)
+  ## Simulate data from observational model
+  for (n in 1:N){
+     y[n]~ dpois(lambda)
+  }	
+}

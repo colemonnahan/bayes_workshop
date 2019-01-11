@@ -1,0 +1,9 @@
+model {
+  #Priors
+  theta~dnorm(1, 1/(.5*.5))
+  logit(p) <- theta
+  # likelihood
+  for(i in 1:R){
+     y[i] ~ dbin(p, N[i])  #stochastic node
+  }
+}

@@ -1,0 +1,14 @@
+model {
+  #Priors
+  theta~dnorm(1, 1/(.5*.5))
+  logit(p) <- theta
+  # likelihood
+  for(i in 1:R){
+     y[i] ~ dbin(p, N[i])  #stochastic node
+  }
+  # posterior predictive distribution
+  for(i in 1:R){
+  # generate 1 for each replicated data set
+     ypred[i] ~ dbin(p,N[i])
+  }
+}
