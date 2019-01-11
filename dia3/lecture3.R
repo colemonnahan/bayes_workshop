@@ -99,3 +99,4 @@ for(i in 1:10){
   points(x=rep(i, N)+ rnorm(N,0,.1), y=ypred[,i]+rnorm(N,0,.1), pch='.')
   points(x=i, y=dat3$y[i], col='red', pch=16)
 }
+
