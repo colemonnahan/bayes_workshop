@@ -19,6 +19,16 @@ dat <- list(nsites=nsites, ndata=length(y),
 boxplot(y~site, data=dat, xlab='Site', ylab='Count')
 
 
+## Explore mode of a hierarchical model
+hyper <- function(lambda, mu, tau) {
+  exp(sum(dnorm(lambda, mu, tau), log=TRUE))
+}
+lambda <- rep(3,10)
+hyper(lambda, mu=3, tau=1)
+hyper(lambda, mu=3, tau=.01)
+hyper(lambda, mu=3, tau=.0001)
+
+
 ## Look at prior predictive
 N <- 10000
 ptau <- abs(rnorm(n=N, mean=0, sd=1))
