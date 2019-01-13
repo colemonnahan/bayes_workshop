@@ -31,6 +31,14 @@ pnorm(-5, 0,1)
 x <- rnorm(500)
 y <- sapply(1:500, function(n) mean(x[1:n]))
 plot(1:500, y)
-hist(x^2)
+abline(h=0)
+hist(x^2, prob=TRUE)
 mean(x^2)
 mean(x)^2
+
+## Use change of variables formulat to get the PDF of Y
+fy <- function(y) dnorm(sqrt(y))/sqrt(y)
+y <- seq(.001, 12, len=1000)
+hist(rnorm(1e6)^2, breaks=100, prob=TRUE, xlim=c(0,10))
+lines(y, fy(y), lwd=2, col='red')
+
