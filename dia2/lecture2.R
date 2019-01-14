@@ -3,13 +3,11 @@
 ## Exercise 1
 lam <- seq(1,10, len=1000)
 like1 <- dpois(x=5, lambda=lam)
-png('exercise1.png', width=9, height=3, units='in', res=500)
 par(mfrow=c(1,3))
 plot(lam, like1, type='l')
 like2 <- sapply(lam, function(i) prod(dpois(x=c(5,4,7), lambda=i)))
 plot(lam, like2, type='l')
 plot(lam, log(like2), type='l')
-dev.off()
 
 ## normal-normal posterior
 y <- .5 # observed
@@ -23,8 +21,6 @@ like <- dnorm(y, mean=theta, sd=sigma)
 mu1 <- (mu0/tau0^2 + y/sigma^2) / (1/tau0^2 + 1/sigma^2)
 tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
 posterior <- dnorm(theta, mean=mu1, tau1)
-
-
 ## Make plot of all 3
 ymax <- max(c(prior, like, posterior))
 plot(0,0, type='n', xlim=range(theta), ylim=c(0, 1.1*ymax))
@@ -38,17 +34,6 @@ plot(theta, posterior, type='l', ylab='Density', xlim=c(-2.5,1))
 ## 95% confidence interval
 CI <- qnorm(p = c(0.025, 0.975), mean=mu1, sd=tau1)
 abline(v=CI)
-
-### Monte Carlo integration. Approximates integrals with percentages of
-### samples
-## First with only 10 samples
-x <- rnorm(10, mean=mu1, sd=tau1)
-mean(x<0)
-quantile(x, probs=c(0.025, 0.975))
-## It improves with more samples:
-x <- rnorm(1e6, mean=mu1, sd=tau1)
-mean(x<0)
-quantile(x, probs=c(0.025, 0.975))
 
 library(stats)
 ## This function plots the beta prior, binomial likelihood, and posterior
@@ -109,6 +94,16 @@ plot.beta.binomial <- function(deaths=5, survivors=4, alpha=1.5,
     lines(p.CI, y=c(scale,scale), lwd=2, lty=2)
   }
 }
+
+
+library(manipulate)
+dev.off()
+manipulate(plot.beta.binomial(deaths, survivors, alpha, beta), 
+           deaths=slider(1,10, 5),
+           survivors=slider(1,10,5),
+           alpha=slider(0,5, 3.5),
+           beta=slider(0,5, 1.5)
+           )
 
 ## Demonstration of what happens to posterior with increasing data for the
 ## beta-binomial example.
