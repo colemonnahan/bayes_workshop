@@ -112,7 +112,7 @@ plot.beta.binomial(2,2, alpha=3.5, beta=1.5, Intervals=FALSE)
 mtext('n=4')
 plot.beta.binomial(10,10, alpha=3.5, beta=1.5, Intervals=FALSE)
 mtext('n=20')
-plot.beta.binomial(5000,2000, alpha=3.5, beta=1.5, Intervals=FALSE)
+plot.beta.binomial(50,50, alpha=3.5, beta=1.5, Intervals=FALSE)
 mtext('n=100')
 
 
