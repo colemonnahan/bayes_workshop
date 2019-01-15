@@ -23,7 +23,8 @@ tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
 posterior <- dnorm(theta, mean=mu1, tau1)
 ## Make plot of all 3
 ymax <- max(c(prior, like, posterior))
-plot(0,0, type='n', xlim=range(theta), ylim=c(0, 1.1*ymax))
+par(mfrow=c(1,1))
+plot(0,0, type='n', xlim=range(theta), ylim=c(0, 1.1*ymax), xlab='theta', ylab='Density') 
 lines(theta, prior, lty=3)
 lines(theta, like, lty=2)
 lines(theta, posterior)
@@ -95,16 +96,6 @@ plot.beta.binomial <- function(deaths=5, survivors=4, alpha=1.5,
   }
 }
 
-
-library(manipulate)
-dev.off()
-manipulate(plot.beta.binomial(deaths, survivors, alpha, beta), 
-           deaths=slider(1,10, 5),
-           survivors=slider(1,10,5),
-           alpha=slider(0,5, 3.5),
-           beta=slider(0,5, 1.5)
-           )
-
 ## Demonstration of what happens to posterior with increasing data for the
 ## beta-binomial example.
 par(mfrow=c(1,3), mar=c(2.5,1,2,.1))
@@ -114,6 +105,16 @@ plot.beta.binomial(10,10, alpha=3.5, beta=1.5, Intervals=FALSE)
 mtext('n=20')
 plot.beta.binomial(50,50, alpha=3.5, beta=1.5, Intervals=FALSE)
 mtext('n=100')
+
+## Use manipulate feature of Rstudio to explore 
+library(manipulate)
+dev.off()
+manipulate(plot.beta.binomial(deaths, survivors, alpha, beta), 
+           deaths=slider(1,50, 5),
+           survivors=slider(1,50,5),
+           alpha=slider(0,5, 3.5),
+           beta=slider(0,5, 1.5)
+)
 
 
 
@@ -133,7 +134,6 @@ x1 <- mc(Niter)
 plot(x1, type='l', ylim=c(-20,20))
 
 ## Run two more
-set.seed(24123)
 x2 <- mc(Niter)
 x3 <- mc(Niter)
 lines(x2, col=2)
@@ -169,7 +169,7 @@ f(10)/f(.5)
 
 Niter <- 2000
 set.seed(23523)
-plot(0, type='n', xlim=c(1,Niter), ylim=c(-4,4))
+plot(0, type='n', xlim=c(1,Niter), ylim=c(-4,4), xlab='iteration', ylab='x')
 x1 <- mcmc(Niter, f=f)
 x2 <- mcmc(Niter, f=f)
 x3 <- mcmc(Niter, f=f)
@@ -207,15 +207,6 @@ lines(x1, col=1)
 lines(x2, col=2)
 lines(x3, col=3)
 
-## Did it give us the distribution we calculated analytically before?
-hist(c(x1,x2,x3), freq=FALSE, breaks=30)
-mu1 <- (mu0/tau0^2 + y/sigma^2) / (1/tau0^2 + 1/sigma^2)
-tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
-lines(xseq <- seq(-4,4, len=1000),
-      dnorm(xseq, mu1, tau1), lwd=2)
-### So the Markov chain give us samples from a posterior even if we dont
-### know the constant. We just need to calculate the likelihood and
-### prior. We can always do this.
 
 ## Exercise: normal-normal posterior with MCMC
 y <- .5 # observed
@@ -228,6 +219,14 @@ like <- function(theta) dnorm(y, mean=theta, sd=sigma)
 posterior <- function(theta) like(theta)*prior(theta)
 samples <- mcmc(Niter=5000, f=posterior, x0=0, U=1)
 hist(samples, probability=TRUE)
+mu1 <- (mu0/tau0^2 + y/sigma^2) / (1/tau0^2 + 1/sigma^2)
+tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
+lines(xseq <- seq(-4,4, len=1000),
+      dnorm(xseq, mu1, tau1), lwd=2)
+### So the Markov chain give us samples from a posterior even if we dont
+### know the constant. We just need to calculate the likelihood and
+### prior. We can always do this.
+
 
 ## Analytical Posterior calculations (mean and SD)
 theta <- seq(-3,0, len=1000) # parameter
