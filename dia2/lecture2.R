@@ -5,7 +5,10 @@ lam <- seq(1,10, len=1000)
 like1 <- dpois(x=5, lambda=lam)
 par(mfrow=c(1,3))
 plot(lam, like1, type='l')
-like2 <- sapply(lam, function(i) prod(dpois(x=c(5,4,7), lambda=i)))
+like2 <- numeric(1000)
+for(i in 1:1000){ 
+  like2[i] <- prod(dpois(x=c(5,4,7), lambda=lam[i]))
+}
 plot(lam, like2, type='l')
 plot(lam, log(like2), type='l')
 
@@ -162,7 +165,7 @@ mcmc <- function(Niter, f, x0=0, U=1){
 
 f <- function(x) dnorm(x, 0, 1) # returns probablity density
 f(0)/f(.5)
-f(1)/f(.5)
+f(100)/f(.5)
 mean(f(1)/f(.5) > runif(1e6))
 f(10)/f(.5)
 
@@ -213,7 +216,7 @@ y <- .5 # observed
 sigma <- 1 # assume known
 mu0 <- -2 # prior mean
 tau0 <- .5 # prior SD
-prior <- function(theta) dnorm(theta, mean=mu0, sd=tau0)
+prior <- function(theta) dnorm(theta, mean=-5, sd=tau0)
 like <- function(theta) dnorm(y, mean=theta, sd=sigma)
 ## Does not include the constant
 posterior <- function(theta) like(theta)*prior(theta)
@@ -236,6 +239,7 @@ posterior2 <- dnorm(theta, mean=mu1, tau1)
 lines(theta, posterior2, lwd=2)
 ## Compare inference
 quantile(samples, probs=c(.025, .975))
+mean(samples)
 qnorm(p=c(0.025, .975), mu1, tau1)
 
 
