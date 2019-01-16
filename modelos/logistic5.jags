@@ -1,6 +1,6 @@
 model {
   #Priors
-  theta~dnorm(1, 1/(.5*.5))
+  theta~dnorm(mu, 1/(sigma*sigma))
   beta1~dnorm(0,2)
   beta2~dnorm(0,2)
   # likelihood

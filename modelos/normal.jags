@@ -1,0 +1,6 @@
+model {
+  ## prior
+  theta~dnorm(-2,1/(.5*.5))
+  ## likelihood
+  y~dnorm(theta,1/(1*1))
+}

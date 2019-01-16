@@ -1,5 +1,3 @@
-##
-
 
 ## Homework 1
 
@@ -25,15 +23,22 @@ p2 <- F2(.98)-F2(1/2)
 p1+p2
 
 ## 1.2
-mean(rnorm(1e5)< -5)
-pnorm(-5, 0,1)
+x <- rnorm(1e5)
+mean(x< 0)
+pnorm(0, 0,1)
 
 x <- rnorm(500)
 y <- sapply(1:500, function(n) mean(x[1:n]))
-plot(1:500, y)
+lines(1:500, y)
 abline(h=0)
-hist(x^2, prob=TRUE)
-mean(x^2)
+
+par(mfrow=c(1,2))
+y <- x^2
+hist(x, prob=TRUE)
+hist(y, prob=TRUE)
+abline(v=mean(y), lwd=2)
+## These are not the same!
+mean(y)
 mean(x)^2
 
 ## Use change of variables formulat to get the PDF of Y

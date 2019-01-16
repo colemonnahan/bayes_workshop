@@ -1,7 +1,7 @@
 model {
   # Prior
-  theta~dnorm(1, 1/(.5*.5))
+  theta~dnorm(mu, 1/(sigma*sigma))
   p <- ilogit(theta)
   # likelihood
-  y ~ dbin(p, N) 
+  y ~ dbin(p, N) 	
 }
