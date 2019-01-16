@@ -2,7 +2,8 @@ library(R2jags)
 
 ## Prior predicive for logistic
 ilogit <- function(x) 1/(1+exp(-x))
-theta <- rnorm(1000, 0, 100)
+theta <- rnorm(1000, 1, .5)
+theta <- rnorm(1000, 1, 100)
 ## Implied prior on p
 p <- ilogit(theta)
 S <- rep(NA, length(theta))
@@ -13,8 +14,6 @@ table(S)
 barplot(table(S))
 
 ## Now run it in JAGS
-library(coda)
-library(R2jags)
 inits <- function() list(theta=rnorm(1))
 pars <- c('theta', 'p')
 dat <- list(y=15, N=20, mu=1, sigma=0.5)
@@ -25,7 +24,7 @@ effectiveSize(fit)
 gelman.diag(as.mcmc(fit))
 theta <- fit$BUGSoutput$sims.matrix[,'theta']
 ## prior vs posterior
-hist(theta, prob=TRUE)
+hist(theta, prob=TRUE, breaks=30)
 x <- seq(-1,3, len=1000)
 lines(x, dnorm(x, 1, dat$sigma), lwd=2)
 
@@ -38,13 +37,24 @@ fit2 <- jags(data=dat2,
              parameters.to.save=pars, n.iter=2000)
 effectiveSize(fit2)
 gelman.diag(as.mcmc(fit2))
-theta <- fit2$BUGSoutput$sims.matrix[,'theta']
-## prior vs posterior
-par(mfrow=c(1,2))
-hist(theta, prob=TRUE)
+theta2 <- fit2$BUGSoutput$sims.matrix[,'theta']
+
+
+## prior vs posterior for the two examples
+par(mfrow=c(2,1))
+hist(theta, prob=TRUE, breaks=30, xlim=c(0,2.5))
 x <- seq(-1,3, len=1000)
-lines(x, dnorm(x, 1, .5))
-hist(ilogit(theta), xlim=c(0,1))
+lines(x, dnorm(x, 1, dat2$sigma), lwd=2)
+hist(theta2, prob=TRUE, xlim=c(0,2.5))
+lines(x, dnorm(x, 1, dat$sigma), lwd=2)
+
+## prior vs posterior for the two examples
+p1 <- fit$BUGSoutput$sims.list$p
+p2 <- fit2$BUGSoutput$sims.list$p
+par(mfrow=c(2,1))
+hist(p1, prob=TRUE, breaks=30, xlim=c(0,1))
+hist(p2, prob=TRUE, breaks=30, xlim=c(0,1))
+
 
 
 ## Add posterior predictive checks to JAGS model
@@ -53,8 +63,8 @@ fit3 <- jags(data=dat2,
              inits=inits,
              model='modelos/logistic3.jags',
              parameters.to.save=pars, n.iter=2000)
-effectiveSize(fit2)
-gelman.diag(as.mcmc(fit2))
+effectiveSize(fit3)
+gelman.diag(as.mcmc(fit3), multivariate = FALSE)
 ypred <- fit3$BUGSoutput$sims.list$ypred
 
 par(mfrow=c(1,1))
@@ -64,6 +74,6 @@ N <- nrow(ypred)
 for(i in 1:10){
   points(x=rep(i, N)+ rnorm(N,0,.1), y=ypred[,i]+rnorm(N,0,.1), pch='.')
 }
-points(x=1:10, y=dat2$y, col='red', pch=16)
+points(x=1:10, y=dat2$y, col='red', cex=2, pch=16)
 
 

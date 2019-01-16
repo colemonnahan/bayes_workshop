@@ -10,6 +10,7 @@ fit1 <- jags(data=dat, inits=inits, parameters.to.save='lambda',
              n.burnin=500, n.thin=1)
 traceplot(fit1)
 geweke.diag(fit1)
+
 effectiveSize(fit1)
 gelman.diag(as.mcmc(fit1))
 post <- data.frame(fit1$BUGSoutput$sims.matrix)
@@ -17,6 +18,19 @@ hist(post$lambda)
 
 ## The normal-normal example from lecture 2 (conjugacy)
 dat <- list(y=.5)
+inits <- function() list(theta=runif(1,-5,5))
+fit2 <- jags(data=dat, inits=inits, parameters.to.save='theta',
+             model.file='modelos/normal.jags', n.chains=3, n.iter=2000,
+             n.burnin=500, n.thin=1)
+traceplot(fit2)
+geweke.diag(fit2)
+effectiveSize(fit2)
+gelman.diag(as.mcmc(fit2))
+post <- data.frame(fit2$BUGSoutput$sims.matrix)
+hist(post$theta)
+
+## The normal-normal example from lecture 2 (conjugacy)
+dat <- list(y=c(.5, .1))
 inits <- function() list(theta=runif(1,-5,5))
 fit2 <- jags(data=dat, inits=inits, parameters.to.save='theta',
              model.file='modelos/normal.jags', n.chains=3, n.iter=2000,

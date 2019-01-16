@@ -1,7 +1,7 @@
 model {
   #Priors
   theta~dnorm(mu, 1/(sigma*sigma))
-  logit(p) <- theta
+  p <- ilogit(theta)
   # likelihood
   for(i in 1:R){
      y[i] ~ dbin(p, N[i])  
