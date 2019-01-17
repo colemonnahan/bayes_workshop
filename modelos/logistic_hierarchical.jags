@@ -1,11 +1,13 @@
 model {
   #Priors
-  theta~dnorm(mu, 1/(sigma*sigma))
-  beta1~dnorm(0,2)
-  beta2~dnorm(0,2)
+  mu~dnorm(1,1/(.5*.5))
+  sigma~dnorm(0,1/(1*1))I(0,)
+
   # likelihood
   for(i in 1:R){
-     p[i] <- ilogit(theta + beta1*x1[i] + beta2*x2[i])
+    # random effects
+    theta[i]~dnorm(mu, 1/(sigma*sigma))
+     p[i] <- ilogit(theta[i])
      y[i] ~ dbin(p[i], N[i]) 
   }
   # posterior predictive distribution

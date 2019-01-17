@@ -13,6 +13,7 @@ model {
    # site[i] is an index
    y[i]~dpois(lambda[site[i]])
  }
+ # posterior predictive distribution
  loglambdapred ~ dnorm(mu, 1/(tau*tau))
  lambdapred <- exp(loglambdapred)
  ypred~ dpois(lambdapred)
