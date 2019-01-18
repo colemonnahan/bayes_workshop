@@ -1,10 +1,23 @@
+### Lab 5: Demonstration of Stan software for Bayesian analysis
+
 library(shinystan)
 library(rstan)
-chains <- parallel::detectCores()-1
-options(mc.cores = chains)
+## chains <- parallel::detectCores()-1
+## options(mc.cores = chains)
 rstan_options(auto_write = TRUE)
 
-## Load empirical data and inits
+
+## Rerun the logistic hierarchical model in Stan
+dat <- list(y=c(15, 12, 11, 12, 4, 15, 17, 12, 16, 14),
+             N=rep(20, 10), R=10)
+inits <- function()
+  list(theta=rnorm(10, 0, 5), mu=rnorm(1), sigma=runif(1,0,2))
+fit <- stan(file='modelos/logistic_hierarchical.stan',
+            data=dat, init=inits, control=list(adapt_delta=.99))
+launch_shinystan(fit)
+
+
+## Here's a more complicated Stan exapmple
 dat <- readRDS('datos/growth_data.RDS')
 inits <- function() list(
         logLinf_mean=runif(1, 2,4),
@@ -25,13 +38,33 @@ inits.nc <- function() list(
         logk_raw=runif(dat$Nfish, -4,4),
         logLinf_raw=runif(dat$Nfish, 4,4))
 
-growth.stan <- stan('modelos/growth.stan', data=dat, chains=chains,
-                 init=inits, open_progress=FALSE, control=list(adapt_delta=.99))
+growth.stan <- stan('modelos/growth.stan', data=dat, seed=1,
+                    init=inits, open_progress=FALSE,
+                    control=list(adapt_delta=.9))
 launch_shinystan(growth.stan)
 
 ## Repeat after non-centering
-growth.nc.stan <- stan('modelos/growth_nc.stan', data=dat, chains=chains,
+growth.nc.stan <- stan('modelos/growth_nc.stan', data=dat, seed=1,
                        init=inits.nc, open_progress=FALSE,
-                       control=list(adapt_delta=.99))
+                       control=list(adapt_delta=.9))
 launch_shinystan(growth.nc.stan)
 
+
+## We can also fit this in TMB both in frequentist and Bayesian paradigms
+library(TMB)
+compile('modelos/growth_nc.cpp')
+dyn.load(dynlib('modelos/growth_nc'))
+
+obj <- MakeADFun(data=dat, parameters=inits.nc(),
+                 random=c('logLinf_raw','logk_raw'),
+                 checkParameterOrder=FALSE)
+
+## Maximum marginal likelihood
+opt <- with(obj, nlminb(par, fn, gr))
+opt$par
+
+## Now Bayesian with tmbstan
+library(tmbstan)
+tmb.fit <- tmbstan(obj, open_progress=FALSE, chains=chains, init=inits.nc,
+               control=list(adapt_delta=.9))
+launch_shinystan(tmb.fit)

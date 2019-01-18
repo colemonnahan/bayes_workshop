@@ -9,7 +9,7 @@ pars <- c('theta', 'mu', 'sigma', 'ypred')
 fit <- jags(data=dat,
             inits=inits, parameters.to.save=pars,
             model='modelos/logistic_hierarchical.jags',
-            n.iter=100000, n.thin=10)
+            n.iter=500000, n.thin=500)
 library(shinystan)
 library(rstan)
 mon <- rstan::monitor(fit$BUGSoutput$sims.array, print=FALSE)
