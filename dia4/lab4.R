@@ -9,14 +9,15 @@ pars <- c('theta', 'mu', 'sigma', 'ypred')
 fit <- jags(data=dat,
             inits=inits, parameters.to.save=pars,
             model='modelos/logistic_hierarchical.jags',
-            n.iter=100000, n.thin=100)
-ESS <- effectiveSize(fit)
-min(ESS)
-Rhat <- gelman.diag(as.mcmc(fit), multivariate=FALSE)$psrf[,2]
-max(Rhat)
+            n.iter=100000, n.thin=10)
+library(shinystan)
+library(rstan)
+mon <- rstan::monitor(fit$BUGSoutput$sims.array, print=FALSE)
+max(mon[,'Rhat'])
+min(mon[, 'n_eff'])
+## launch_shinystan(as.shinystan(as.mcmc(fit)))
 ypred <- fit$BUGSoutput$sims.list$ypred
 post <- fit$BUGSoutput$sims.matrix
-pairs(post[,1:10])
 
 ## Posterior predictive
 plot(0,0, type='n', xlim=c(0,11), ylim=c(0,20), xlab='Replicate',
