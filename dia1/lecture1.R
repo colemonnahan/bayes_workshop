@@ -1,6 +1,5 @@
 ### Lecture 1
 
-
 ## Review the R functions for normal random variables
 rnorm(5)
 dnorm(x=3, mean=0, sd=1)

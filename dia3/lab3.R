@@ -38,6 +38,7 @@ for(i in 1:10){
   points(x=i, y=dat4$y[i], col='red', pch=16)
 }
 
+## fit3 is from lecture3.R
 fit3$BUGSoutput$DIC
 fit4$BUGSoutput$DIC
 

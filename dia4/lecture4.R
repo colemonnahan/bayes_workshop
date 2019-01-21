@@ -81,9 +81,9 @@ points(16, median(ypred), pch=15)
 
 ## the posterior vs priors for the hyper parameters
 par(mfrow=c(2,1))
-hist(fit$BUGSoutput$sims.list$tau, prob=TRUE, breaks=50)
+hist(fit$BUGSoutput$sims.list$tau, prob=TRUE, breaks=50, main='tau')
 x <- seq(0,5, len=1000)
 lines(x, dnorm(x, mean=0, sd=1), lwd=2)
-hist(fit$BUGSoutput$sims.list$mu, prob=TRUE, breaks=50)
+hist(fit$BUGSoutput$sims.list$mu, prob=TRUE, breaks=50, main='mu')
 x <- seq(0,5, len=1000)
 lines(x, dnorm(x, mean=1, sd=1), lwd=2)

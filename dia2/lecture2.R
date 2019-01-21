@@ -135,7 +135,6 @@ mc <- function(Niter){
 }
 x1 <- mc(Niter)
 plot(x1, type='l', ylim=c(-20,20))
-
 ## Run two more
 x2 <- mc(Niter)
 x3 <- mc(Niter)
@@ -163,11 +162,12 @@ mcmc <- function(Niter, f, x0=0, U=1){
   return(x)
 }
 
+## Explore f a little
 f <- function(x) dnorm(x, 0, 1) # returns probablity density
 f(0)/f(.5)
 f(100)/f(.5)
+f(1)/f(.5)
 mean(f(1)/f(.5) > runif(1e6))
-f(10)/f(.5)
 
 
 Niter <- 2000
@@ -185,38 +185,12 @@ hist(c(x1,x2,x3), freq=FALSE, breaks=30)
 lines(xseq <- seq(-4,4, len=1000), dnorm(xseq, 0,1), lwd=2, col=2)
 ## It is the density f! (Standard normal in this case)
 
-## From the example last week with conjugacy. Let's assume we can't
-## calculate the constant
-y <- .5 # observed data point
-sigma <- 1 # assumed known variance
-mu0 <- -1 # prior mean
-tau0 <- .5 # prior SD
-
-## We can calculate the posterior density without the constant like this
-f2 <- function(theta){
-  likelihood <- exp(-(y-theta)^2/(2*sigma^2))
-  prior <- exp(-(theta-mu0)^2/(2*tau0^2))
-  post <- likelihood * prior
-  return(post)
-}
-
-Niter <- 2000
-set.seed(98347)
-plot(0, type='n', xlim=c(1,Niter), ylim=c(-3,2))
-x1 <- mcmc(Niter, f=f2)
-x2 <- mcmc(Niter, f=f2)
-x3 <- mcmc(Niter, f=f2)
-lines(x1, col=1)
-lines(x2, col=2)
-lines(x3, col=3)
-
-
 ## Exercise: normal-normal posterior with MCMC
 y <- .5 # observed
 sigma <- 1 # assume known
 mu0 <- -2 # prior mean
 tau0 <- .5 # prior SD
-prior <- function(theta) dnorm(theta, mean=-5, sd=tau0)
+prior <- function(theta) dnorm(theta, mean=mu0, sd=tau0)
 like <- function(theta) dnorm(y, mean=theta, sd=sigma)
 ## Does not include the constant
 posterior <- function(theta) like(theta)*prior(theta)
@@ -224,22 +198,15 @@ samples <- mcmc(Niter=5000, f=posterior, x0=0, U=1)
 hist(samples, probability=TRUE)
 mu1 <- (mu0/tau0^2 + y/sigma^2) / (1/tau0^2 + 1/sigma^2)
 tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
-lines(xseq <- seq(-4,4, len=1000),
-      dnorm(xseq, mu1, tau1), lwd=2)
+theta <- seq(-3,0, len=1000) # parameter
+## The true posterior density
+lines(theta, dnorm(theta, mu1, tau1), lwd=2)
 ### So the Markov chain give us samples from a posterior even if we dont
 ### know the constant. We just need to calculate the likelihood and
 ### prior. We can always do this.
-
-
-## Analytical Posterior calculations (mean and SD)
-theta <- seq(-3,0, len=1000) # parameter
-mu1 <- (mu0/tau0^2 + y/sigma^2) / (1/tau0^2 + 1/sigma^2)
-tau1 <- sqrt(1 / (1/tau0^2 + 1/sigma^2))
-posterior2 <- dnorm(theta, mean=mu1, tau1)
-lines(theta, posterior2, lwd=2)
 ## Compare inference
 quantile(samples, probs=c(.025, .975))
-mean(samples)
 qnorm(p=c(0.025, .975), mu1, tau1)
-
+mean(samples)
+mu1
 

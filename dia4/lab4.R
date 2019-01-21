@@ -9,10 +9,11 @@ pars <- c('theta', 'mu', 'sigma', 'ypred')
 fit <- jags(data=dat,
             inits=inits, parameters.to.save=pars,
             model='modelos/logistic_hierarchical.jags',
-            n.iter=500000, n.thin=500)
+            n.iter=50000, n.thin=50)
 library(shinystan)
 library(rstan)
-mon <- rstan::monitor(fit$BUGSoutput$sims.array, print=FALSE)
+## This is a better way to check diagnostics
+mon <- monitor(fit$BUGSoutput$sims.array, warmup=0, print=FALSE)
 max(mon[,'Rhat'])
 min(mon[, 'n_eff'])
 ## launch_shinystan(as.shinystan(as.mcmc(fit)))
@@ -39,3 +40,4 @@ lines(x, dnorm(x, mean=0, sd=1), lwd=2)
 ## Posterior for theta's
 theta <- fit$BUGSoutput$sims.list$theta
 boxplot(theta, xlab='site', ylab='theta')
+

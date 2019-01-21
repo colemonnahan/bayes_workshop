@@ -93,7 +93,7 @@ inits <- function() list(lambda=runif(1,1,15))
 fit1 <- jags(data=dat, inits=inits, parameters.to.save='lambda',
              model.file='modelos/insect1.jags', n.chains=3, n.iter=2000,
              n.burnin=500, n.thin=1)
-traceplot(fit1)
+R2jags::traceplot(fit1)
 geweke.diag(fit1)
 effectiveSize(fit1)
 gelman.diag(as.mcmc(fit1))

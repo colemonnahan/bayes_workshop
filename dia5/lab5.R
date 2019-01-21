@@ -38,33 +38,16 @@ inits.nc <- function() list(
         logk_raw=runif(dat$Nfish, -4,4),
         logLinf_raw=runif(dat$Nfish, 4,4))
 
+## The "centered" version of the model. This one has many problems
+## that show up as divergences.
 growth.stan <- stan('modelos/growth.stan', data=dat, seed=1,
                     init=inits, open_progress=FALSE,
                     control=list(adapt_delta=.9))
 launch_shinystan(growth.stan)
 
-## Repeat after non-centering
+## Repeat after non-centering. Now the divergences are gone and it runs 
+## much faster and mixes much better.
 growth.nc.stan <- stan('modelos/growth_nc.stan', data=dat, seed=1,
                        init=inits.nc, open_progress=FALSE,
                        control=list(adapt_delta=.9))
 launch_shinystan(growth.nc.stan)
-
-
-## We can also fit this in TMB both in frequentist and Bayesian paradigms
-library(TMB)
-compile('modelos/growth_nc.cpp')
-dyn.load(dynlib('modelos/growth_nc'))
-
-obj <- MakeADFun(data=dat, parameters=inits.nc(),
-                 random=c('logLinf_raw','logk_raw'),
-                 checkParameterOrder=FALSE)
-
-## Maximum marginal likelihood
-opt <- with(obj, nlminb(par, fn, gr))
-opt$par
-
-## Now Bayesian with tmbstan
-library(tmbstan)
-tmb.fit <- tmbstan(obj, open_progress=FALSE, chains=chains, init=inits.nc,
-               control=list(adapt_delta=.9))
-launch_shinystan(tmb.fit)

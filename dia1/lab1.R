@@ -44,6 +44,6 @@ mean(x)^2
 ## Use change of variables formulat to get the PDF of Y
 fy <- function(y) dnorm(sqrt(y))/sqrt(y)
 y <- seq(.001, 12, len=1000)
-hist(rnorm(1e6)^2, breaks=100, prob=TRUE, xlim=c(0,10))
+par(mfrow=c(1,1))
+hist(rnorm(1e6)^2, breaks=200, prob=TRUE, xlim=c(0,6))
 lines(y, fy(y), lwd=2, col='red')
-
