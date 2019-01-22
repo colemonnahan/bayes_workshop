@@ -1,19 +1,20 @@
 # bayes_workshop
 
 Los materiales para un curso de verano en la Universidad de Concepción,
-Concepción, Chile en enero, 2019 por Dr. Cole Monnahan de la Univerisad de
-Washington (E.E.U.U). El curso utilizó una mezcla entre ingles y espanol.
-
+Concepción, Chile en enero, 2019 por Dr. Cole Monnahan de la Universidad de
+Washington (E.E.U.U). El curso utilizó una mezcla entre español e
+inglés. Las presentaciones son en español y los archivos de código (R y
+JAGS) son en inglés.
 
 Los contenidos:
--La teoría de las distribuciones de probabilidades.
--Conceptos fundamentales de la construcción e inferencia de modelos Bayesianos.
--Introducción a la estructura y uso de JAGS.
--Implementación de aplicaciones ecológicas terrestres y marinas con efectos
+ - La teoría de las distribuciones de probabilidades.
+ - Conceptos fundamentales de la construcción e inferencia de modelos Bayesianos.
+ - Introducción a la estructura y uso de JAGS.
+ - Implementación de aplicaciones ecológicas terrestres y marinas con efectos
 fijos y aleatorios.
--Diagnósticos de las cadenas Markovianas provenientes de cualquier
+ - Diagnósticos de las cadenas Markovianas provenientes de cualquier
 plataforma de modelación.
--Revisión y contrastación con otras plataformas estadísticas para
+ - Revisión y contrastación con otras plataformas estadísticas para
 aplicaciones más complejas.
 
 Asignatura que profundiza la teoría y la práctica de los modelos Bayesianos
